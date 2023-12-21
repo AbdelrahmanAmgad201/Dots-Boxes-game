@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
+//fsafsafopajfoaspfasfsajfoap
 typedef struct{
     int up;
     int bottom;
