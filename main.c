@@ -1,23 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "dataStructure.h"
+#include "colors.h"
 
-typedef struct {
-    int up;
-    int bottom;
-    int right;
-    int left;
-    int fillCount;  // ranges from 0-4
-} cell;
-
-typedef struct {
-    int time;
-    int score1;
-    int score2;
-    int turn;
-    int cellsFilled; // 0-4 or 0-25 depending on easy/hard modes
-    cell **cells; // 2d array of structs either 2*2 or 5*2
-} gameState;
 
 char printMenuAndGetCommand() {
     char command;
@@ -62,7 +48,7 @@ void printBoard(cell **cells, int size) {
             } else if (cells[i][j].left == 2) {
                 printf("|  ");
             } else {
-                printf("  ");
+                printf("   ");
             }
 
             if (cells[i][j].right == 1 && j == size - 1) {
@@ -70,7 +56,7 @@ void printBoard(cell **cells, int size) {
             } else if (cells[i][j].right == 2 && j == size - 1) {
                 printf("|  ");
             } else {
-                printf("  ");
+                printf("   ");
             }
         }
 
@@ -143,10 +129,12 @@ int main() {
         initializeGameState(game);
 
         while (1) {
+            printf("Player1:%d Player2:%d\n",game->score1,game->score2);
             printBoard(game->cells, size);
-            printf("\n");
+            printf("\n player %d: ",game->turn);
             scanf("%s", move);
             currentGameTurn(game, move, size);
+            system("cls");
         }
     } else if (order == '2') {
         int size = 5;
@@ -156,18 +144,20 @@ int main() {
         initializeGameState(game);
 
         while (1) {
+            printf("Player1:%d Player2:%d\n",game->score1,game->score2);
             printBoard(game->cells, size);
-            printf("\n");
+            printf("\n\nplayer %d: ",game->turn);
             scanf("%s", move);
             currentGameTurn(game, move, size);
+            system("cls");
         }
     } else if (order == '3') {
         printf("leaderboard\n");
     } else if (order == '4') {
-        printf("Come Again Later :)\n");
+        printf("Come Again Later <3\n");
         return 0;
     } else {
         printf("invalid Command\n");
-        return 0;
+        return 1;
     }
 }
