@@ -19,23 +19,6 @@ void createArr(gameState *game, int size) {
         game->cells[i] = (cell *)calloc(size, sizeof(cell));
     }
 }
-
-void initializeGameState(gameState *game) {
-    game->score1 = 0;
-    game->score2 = 0;
-    game->time = 0;
-    game->turn = 1;
-    game->cellsFilled = 0;
-}
-
-void printBoard(cell **cells, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("+");
-            if (cells[i][j].up == 1) {
-                printf("--");
-            } else if (cells[i][j].up == 2) {
-                printf("--");
             } else {
                 printf("  ");
             }
@@ -96,21 +79,25 @@ void currentGameTurn(gameState *currentGame, char *move, int size) {
         currentGame->cells[i][j].up = currentGame->turn;
         if (i != 0) {
             currentGame->cells[i - 1][j].bottom = currentGame->turn;
+            currentGame->cells[i-1][j].fillCount++;
         }
     } else if (k == 'b') {
         currentGame->cells[i][j].bottom = currentGame->turn;
         if (i != size - 1) {
             currentGame->cells[i + 1][j].up = currentGame->turn;
+            currentGame->cells[i+1][j].fillCount++;
         }
     } else if (k == 'r') {
         currentGame->cells[i][j].right = currentGame->turn;
         if (j != size - 1) {
             currentGame->cells[i][j + 1].left = currentGame->turn;
+            currentGame->cells[i][j+1].fillCount++;
         }
     } else if (k == 'l') {
         currentGame->cells[i][j].left = currentGame->turn;
         if (j != 0) {  // Fix: Check if j is not at the beginning of the row
             currentGame->cells[i][j - 1].right = currentGame->turn;
+            currentGame->cells[i][j-1].fillCount++;
         }
     }
     currentGame->cells[i][j].fillCount++;

@@ -1,0 +1,13 @@
+1)check validity of input every turn
+
+2)printing the grid has an error in the vertical lines(right)
+
+_________________________________
+
+2)Check for Win function
+
+3)Undo / Redo
+
+4)save / load
+
+5)
