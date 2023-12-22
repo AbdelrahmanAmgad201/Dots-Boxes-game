@@ -44,17 +44,17 @@ void printBoard(cell **cells, int size) {
 
         for (int j = 0; j < size; j++) {
             if (cells[i][j].left == 1) {
-                printf("|  ");
+                printf(RED "|  " RESET);
             } else if (cells[i][j].left == 2) {
-                printf("|  ");
+                printf(BLUE "|  " RESET);
             } else {
                 printf("   ");
             }
 
             if (cells[i][j].right == 1 && j == size - 1) {
-                printf("|");
+                printf(RED "|" RESET);
             } else if (cells[i][j].right == 2 && j == size - 1) {
-                printf("|");
+                printf(BLUE "|" RESET);
             } 
         }
 
