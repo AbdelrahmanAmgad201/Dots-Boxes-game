@@ -63,9 +63,9 @@ void printBoard(cell **cells, int size) {
             for (int j = 0; j < size; j++) {
                 printf("+");
                 if (cells[i][j].bottom == 1) {
-                    printf("--");
+                    printf(RED "--" RESET);
                 } else if (cells[i][j].bottom == 2) {
-                    printf("--");
+                    printf(BLUE "--" RESET);
                 }
                 else{
                     printf("  ");
@@ -84,6 +84,28 @@ int checkCellFull(gameState *currentGame, int i, int j) {
     }
 
     return 0;
+}
+void CheckWinner(gameState *currentGame , int size) {
+    if(currentGame->cellsFilled == size*size)
+    {
+        if(currentGame->score1 > currentGame->score2)
+        {
+            printf(RED "%s "RESET"is the Winner !!",currentGame->player1Name);
+            exit(0);
+            
+        }
+        else if(currentGame->score1 < currentGame->score2){
+            printf(BLUE "%s "RESET"is the Winner !!",currentGame->player2Name);
+            exit(0);
+
+        }
+        else{
+            printf(RED"DR"BLUE"AW"RESET" :(");
+            exit(0);
+        }
+
+    }
+   
 }
 
 void currentGameTurn(gameState *currentGame, char *move, int size) {
@@ -128,30 +150,42 @@ int main() {
         char move[4];
         gameState *game = (gameState *)malloc(sizeof(gameState));
         createArr(game, size);
+        printf("player 1 name: ");
+        scanf("%s",game->player1Name);
+        printf("player 2 name: ");
+        scanf("%s",game->player2Name);
         initializeGameState(game);
 
         while (1) {
-            printf("Player1:%d Player2:%d\n",game->score1,game->score2);
+            CheckWinner(game , size);
+            printf("%s:%d %s:%d\n", game->player1Name , game->score1 ,game->player2Name ,game->score2);
             printBoard(game->cells, size);
-            printf("\n player %d: ",game->turn);
+            (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
             scanf("%s", move);
             currentGameTurn(game, move, size);
             system("cls");
+            
         }
     } else if (order == '2') {
         int size = 5;
         char move[4];
         gameState *game = (gameState *)malloc(sizeof(gameState));
         createArr(game, size);
+        printf("player 1 name: ");
+        scanf("%s",game->player1Name);
+        printf("player 2 name: ");
+        scanf("%s",game->player2Name);
         initializeGameState(game);
 
         while (1) {
-            printf("Player1:%d Player2:%d\n",game->score1,game->score2);
+            CheckWinner(game , size);
+            printf("%s:%d %s:%d\n", game->player1Name , game->score1 ,game->player2Name ,game->score2);
             printBoard(game->cells, size);
-            printf("\n\nplayer %d: ",game->turn);
+            (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
             scanf("%s", move);
             currentGameTurn(game, move, size);
             system("cls");
+            
         }
     } else if (order == '3') {
         printf("leaderboard\n");
