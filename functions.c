@@ -132,34 +132,40 @@ void currentGameTurn(gameState *currentGame, char *move, int size) {
     int i = (move[0] - '0') - 1;
     int j = (move[1] - '0') - 1;
     char k = move[2];
+    int flag = 0;
     checkValidity(currentGame,&i,&j,&k,size);
     if (k == 'u') {
         currentGame->cells[i][j].up = currentGame->turn;
         if (i != 0) {
             currentGame->cells[i - 1][j].bottom = currentGame->turn;
             currentGame->cells[i - 1][j].fillCount++;
+            flag = checkCellFull(currentGame,i-1,j);
+            
         }
     } else if (k == 'b') {
         currentGame->cells[i][j].bottom = currentGame->turn;
         if (i != size - 1) {
             currentGame->cells[i + 1][j].up = currentGame->turn;
             currentGame->cells[i + 1][j].fillCount++;
+            flag = checkCellFull(currentGame,i+1,j);
         }
     } else if (k == 'r') {
         currentGame->cells[i][j].right = currentGame->turn;
         if (j != size - 1) {
             currentGame->cells[i][j + 1].left = currentGame->turn;
             currentGame->cells[i][j + 1].fillCount++;
+            flag = checkCellFull(currentGame,i,j+1);
         }
     } else if (k == 'l') {
         currentGame->cells[i][j].left = currentGame->turn;
         if (j != 0) {  // Fix: Check if j is not at the beginning of the row
             currentGame->cells[i][j - 1].right = currentGame->turn;
             currentGame->cells[i][j - 1].fillCount++;
+            flag = checkCellFull(currentGame,i,j-1);
         }
     }
     currentGame->cells[i][j].fillCount++;
-    if (!checkCellFull(currentGame, i, j)) {
+    if (!(checkCellFull(currentGame, i, j) || flag )) {
         currentGame->turn = (currentGame->turn == 1) ? 2 : 1;
     }
 }
