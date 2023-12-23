@@ -107,11 +107,32 @@ void CheckWinner(gameState *currentGame , int size) {
     }
    
 }
+void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size)
+{
+    while (*i > size - 1 || *i < 0 || *j > size - 1 || *j < 0 ||
+           (*k != 'u' && *k != 'b' && *k != 'r' && *k != 'l') ||
+           (*k == 'u' && currentGame->cells[*i][*j].up != 0) ||
+           (*k == 'b' && currentGame->cells[*i][*j].bottom != 0) ||
+           (*k == 'r' && currentGame->cells[*i][*j].right != 0) ||
+           (*k == 'l' && currentGame->cells[*i][*j].left != 0))
+    {
+        printf("Invalid input! Please enter a valid command: ");
+        char newMove[5];
+        fgets(newMove, sizeof(newMove), stdin);
+        *i = (newMove[0] - '0') - 1;
+        *j = (newMove[1] - '0') - 1;
+        *k = newMove[2];
+        checkValidity(currentGame,i,j,k,size);
+
+    }
+}
+
 
 void currentGameTurn(gameState *currentGame, char *move, int size) {
     int i = (move[0] - '0') - 1;
     int j = (move[1] - '0') - 1;
     char k = move[2];
+    checkValidity(currentGame,&i,&j,&k,size);
     if (k == 'u') {
         currentGame->cells[i][j].up = currentGame->turn;
         if (i != 0) {
@@ -147,7 +168,7 @@ int main() {
     char order = printMenuAndGetCommand();
     if (order == '1') {
         int size = 2;
-        char move[4];
+        char move[5];
         gameState *game = (gameState *)malloc(sizeof(gameState));
         createArr(game, size);
         printf("player 1 name: ");
@@ -168,7 +189,7 @@ int main() {
         }
     } else if (order == '2') {
         int size = 5;
-        char move[4];
+        char move[5];
         gameState *game = (gameState *)malloc(sizeof(gameState));
         createArr(game, size);
         printf("player 1 name: ");
