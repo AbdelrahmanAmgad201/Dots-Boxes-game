@@ -1,5 +1,5 @@
 
-1)HeaderFiles
+1)When we fill 2 boxes in the same time it increments the score by only 1
 
 2)Undo / Redo
 
