@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include "dataStructure.h"
 #include "colors.h"
+void undo(gameState *currentGame, gameState history[], int *count);
+
+void redo(gameState *currentGame, gameState history[], int *count);
+
+void scanNames(gameState*game);
 
 char printMenuAndGetCommand() ;
 
@@ -27,7 +32,7 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size);
 
 
 
-void currentGameTurn(gameState *currentGame, char *move, int size) ;
+void currentGameTurn(gameState *currentGame, char *move, int size , gameState history[] , int count);
 
 #endif
 

@@ -4,6 +4,67 @@
 #include "dataStructure.h"
 #include "colors.h"
 #include "functions.h"
+// void saveGameState(const char *filename, const gameState *gameState) {
+//     FILE *file = fopen(filename, "wb");
+//     if (file!=NULL) {
+//         // Write the gameState structure to the file
+//         fwrite(gameState, sizeof(gameState), 1, file);
+//         // Write the cell data to the file
+//         for (int i = 0; i < gameState->cellsFilled; i++) {
+//             fwrite(gameState->cells[i], sizeof(cell), 1, file);
+//         }
+//         fclose(file);
+//     } else {
+//         printf("Error opening file '%s' for writing\n", filename);
+//     }
+// }
+
+// // Function to load the game state from a binary file
+// void loadGameState(const char *filename,gameState *gameState) {
+//     FILE *file = fopen(filename,"rb");
+//     if (file!=NULL) {
+//         // Read the gameState structure from the file
+//         fread(gameState,sizeof(gameState), 1, file);
+//         // Allocate memory for cells based on the loaded gameState
+//         gameState->cells = (cell *)malloc(gameState->cellsFilled * sizeof(cell));
+//         for (int i = 0;i<gameState->cellsFilled;i++) {
+//             gameState->cells[i]=(cell*)malloc(sizeof(cell));
+//             fread(gameState->cells[i],sizeof(cell),1,file);
+//         }
+//         fclose(file);
+//     } else {
+//         printf("Error opening file '%s' for reading\n", filename);
+//     }
+// }
+
+
+void undo(gameState *currentGame, gameState history[], int *count)
+{
+    if ((*count) > 0 && (currentGame->turn == history[(*count) - 1].turn))
+    {
+        (*count)--;
+        *currentGame = history[*count];
+    }
+
+}
+
+void redo(gameState *currentGame, gameState history[], int *count)
+{
+    if (history[(*count) + 1].turn != 0)
+    {
+        (*count)++;
+        *currentGame = history[*count];
+    }
+}
+
+void scanNames(gameState*game)
+{
+    printf("player 1 name: ");
+    scanf("%s",game->player1Name);
+    printf("player 2 name: ");
+    scanf("%s",game->player2Name);
+
+}
 
 char printMenuAndGetCommand() {
     char command;
@@ -128,7 +189,16 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size)
 }
 
 
-void currentGameTurn(gameState *currentGame, char *move, int size) {
+void currentGameTurn(gameState *currentGame, char *move, int size , gameState history[] , int count) {
+    if(move[0] == 'u')
+    {
+        undo(currentGame,history, &count);
+    }
+    else if(move[0] == 'r')
+    {
+        redo(currentGame,history, &count);
+    }
+    else{
     int i = (move[0] - '0') - 1;
     int j = (move[1] - '0') - 1;
     char k = move[2];
@@ -167,5 +237,6 @@ void currentGameTurn(gameState *currentGame, char *move, int size) {
     currentGame->cells[i][j].fillCount++;
     if (!(checkCellFull(currentGame, i, j) || flag )) {
         currentGame->turn = (currentGame->turn == 1) ? 2 : 1;
+    }
     }
 }

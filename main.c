@@ -7,18 +7,19 @@
 
 
 
+
+
 int main() {
     char order = printMenuAndGetCommand();
     if (order == '1') {
         int size = 2;
         char move[5];
-        gameState *game = (gameState *)malloc(sizeof(gameState));
+        gameState *game = (gameState *)malloc(sizeof(gameState)); 
         createArr(game, size);
-        printf("player 1 name: ");
-        scanf("%s",game->player1Name);
-        printf("player 2 name: ");
-        scanf("%s",game->player2Name);
+        scanNames(game);
         initializeGameState(game);
+        int counter = 0;
+        gameState history[12] ={0};
 
         while (1) {
             CheckWinner(game , size);
@@ -26,8 +27,10 @@ int main() {
             printBoard(game->cells, size);
             (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
             scanf("%s", move);
-            currentGameTurn(game, move, size);
+            currentGameTurn(game, move, size, history, counter);
             system("cls");
+            history[counter++] =* game;
+            printf("%d\n",history[counter-1].cellsFilled);
             
         }
     } else if (order == '2') {
@@ -35,11 +38,10 @@ int main() {
         char move[5];
         gameState *game = (gameState *)malloc(sizeof(gameState));
         createArr(game, size);
-        printf("player 1 name: ");
-        scanf("%s",game->player1Name);
-        printf("player 2 name: ");
-        scanf("%s",game->player2Name);
+        scanNames(game);
         initializeGameState(game);
+        int counter = 0;
+        gameState history[60] ={0};
 
         while (1) {
             CheckWinner(game , size);
@@ -47,8 +49,11 @@ int main() {
             printBoard(game->cells, size);
             (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
             scanf("%s", move);
-            currentGameTurn(game, move, size);
+            currentGameTurn(game, move, size, history, counter);
             system("cls");
+            history[counter++] = *game;
+            printf("%d\n",history[counter-1].cellsFilled);
+
             
         }
     } else if (order == '3') {
