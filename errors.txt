@@ -1,10 +1,5 @@
-
-1)When we fill 2 boxes in the same time it increments the score by only 1
-
-2)Undo / Redo
-
-4)save / load
-
-5)AI
-
-6)chain
+1)fix undo / Redo
+2)save/load
+3)leaderBoard
+4)AI
+5)chain
