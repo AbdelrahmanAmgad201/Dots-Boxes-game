@@ -95,22 +95,39 @@ void printBoard(cell **cells, int size) {
         for (int j = 0; j < size; j++) {
             printf("+");
             if (cells[i][j].up == 1) {
-                printf( RED "--" RESET );
+                printf( RED "----" RESET );
             } else if (cells[i][j].up == 2) {
-                printf( BLUE "--" RESET );
+                printf( BLUE "----" RESET );
             } else {
-                printf("  ");
+                printf("    ");
             }
         }
         printf("+\n");
 
         for (int j = 0; j < size; j++) {
             if (cells[i][j].left == 1) {
-                printf(RED "|  " RESET);
+                printf(RED "|    " RESET);
             } else if (cells[i][j].left == 2) {
-                printf(BLUE "|  " RESET);
+                printf(BLUE "|    " RESET);
             } else {
-                printf("   ");
+                printf("     ");
+            }
+
+            if (cells[i][j].right == 1 && j == size - 1) {
+                printf(RED "|" RESET);
+            } else if (cells[i][j].right == 2 && j == size - 1) {
+                printf(BLUE "|" RESET);
+            } 
+        }
+
+        printf("\n");
+        for (int j = 0; j < size; j++) {
+            if (cells[i][j].left == 1) {
+                printf(RED "|    " RESET);
+            } else if (cells[i][j].left == 2) {
+                printf(BLUE "|    " RESET);
+            } else {
+                printf("     ");
             }
 
             if (cells[i][j].right == 1 && j == size - 1) {
@@ -125,12 +142,12 @@ void printBoard(cell **cells, int size) {
             for (int j = 0; j < size; j++) {
                 printf("+");
                 if (cells[i][j].bottom == 1) {
-                    printf(RED "--" RESET);
+                    printf(RED "----" RESET);
                 } else if (cells[i][j].bottom == 2) {
-                    printf(BLUE "--" RESET);
+                    printf(BLUE "----" RESET);
                 }
                 else{
-                    printf("  ");
+                    printf("    ");
                 }
             }
             printf("+");
