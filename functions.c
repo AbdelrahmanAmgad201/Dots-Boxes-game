@@ -54,6 +54,7 @@ void redo(gameState *currentGame, gameState history[], int *count)
     {
         (*count)++;
         *currentGame = history[*count];
+
     }
 }
 
@@ -68,12 +69,12 @@ void scanNames(gameState*game)
 
 char printMenuAndGetCommand() {
     char command;
-    printf("   DOTS AND BOXES\n\n 1)2X2\n 2)5x5\n 3)leaderboard\n 4)End Game\n");
+    printf(MAGENTA"   DOTS AND BOXES\n"RESET CYAN"\n 1)2X2\n 2)5x5\n 3)leaderboard\n 4)End Game\n"RESET);
     scanf(" %c", &command);
     return command;
 }
 
-void createArr(gameState *game, int size) {
+void createArr(gameState *game, int size) { //create 2d array of cells
     game->cells = (cell **)malloc(size * sizeof(cell *));
     for (int i = 0; i < size; i++) {
         // Allocate and initialize memory for each row using calloc
@@ -81,7 +82,7 @@ void createArr(gameState *game, int size) {
     }
 }
 
-void initializeGameState(gameState *game) {
+void initializeGameState(gameState *game) { //initialize the game state at the beginning of each game
     game->score1 = 0;
     game->score2 = 0;
     game->time = 0;
@@ -189,54 +190,62 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size)
 }
 
 
-void currentGameTurn(gameState *currentGame, char *move, int size , gameState history[] , int count) {
-    if(move[0] == 'u')
+void currentGameTurn(gameState *currentGame, char *typeofMove, int size , gameState history[] , int count) {
+    if(typeofMove[0] == '2')
     {
         undo(currentGame,history, &count);
+        printf("undo");
     }
-    else if(move[0] == 'r')
+    else if(typeofMove[0] == '3')
     {
         redo(currentGame,history, &count);
+        printf("redo");
     }
-    else{
-    int i = (move[0] - '0') - 1;
-    int j = (move[1] - '0') - 1;
-    char k = move[2];
-    int flag = 0;
-    checkValidity(currentGame,&i,&j,&k,size);
-    if (k == 'u') {
-        currentGame->cells[i][j].up = currentGame->turn;
-        if (i != 0) {
-            currentGame->cells[i - 1][j].bottom = currentGame->turn;
-            currentGame->cells[i - 1][j].fillCount++;
-            flag = checkCellFull(currentGame,i-1,j);
-            
+    else if(typeofMove[0] == '1' )
+    {
+        printf("Enter Your Move:");
+        char move[5];
+        scanf(" %3s", move);    
+        int i = (move[0] - '0') - 1;
+        int j = (move[1] - '0') - 1;
+        char k = move[2];
+        int flag = 0;
+        checkValidity(currentGame,&i,&j,&k,size);
+        if (k == 'u') {
+            currentGame->cells[i][j].up = currentGame->turn;
+            if (i != 0) {
+                currentGame->cells[i - 1][j].bottom = currentGame->turn;
+                currentGame->cells[i - 1][j].fillCount++;
+                flag = checkCellFull(currentGame,i-1,j);
+                
+            }
+        } else if (k == 'b') {
+            currentGame->cells[i][j].bottom = currentGame->turn;
+            if (i != size - 1) {
+                currentGame->cells[i + 1][j].up = currentGame->turn;
+                currentGame->cells[i + 1][j].fillCount++;
+                flag = checkCellFull(currentGame,i+1,j);
+            }
+        } else if (k == 'r') {
+            currentGame->cells[i][j].right = currentGame->turn;
+            if (j != size - 1) {
+                currentGame->cells[i][j + 1].left = currentGame->turn;
+                currentGame->cells[i][j + 1].fillCount++;
+                flag = checkCellFull(currentGame,i,j+1);
+            }
+        } else if (k == 'l') {
+            currentGame->cells[i][j].left = currentGame->turn;
+            if (j != 0) {  // Fix: Check if j is not at the beginning of the row
+                currentGame->cells[i][j - 1].right = currentGame->turn;
+                currentGame->cells[i][j - 1].fillCount++;
+                flag = checkCellFull(currentGame,i,j-1);
+            }
         }
-    } else if (k == 'b') {
-        currentGame->cells[i][j].bottom = currentGame->turn;
-        if (i != size - 1) {
-            currentGame->cells[i + 1][j].up = currentGame->turn;
-            currentGame->cells[i + 1][j].fillCount++;
-            flag = checkCellFull(currentGame,i+1,j);
+        currentGame->cells[i][j].fillCount++;
+        if (!(checkCellFull(currentGame, i, j) || flag )) {
+            currentGame->turn = (currentGame->turn == 1) ? 2 : 1;
         }
-    } else if (k == 'r') {
-        currentGame->cells[i][j].right = currentGame->turn;
-        if (j != size - 1) {
-            currentGame->cells[i][j + 1].left = currentGame->turn;
-            currentGame->cells[i][j + 1].fillCount++;
-            flag = checkCellFull(currentGame,i,j+1);
-        }
-    } else if (k == 'l') {
-        currentGame->cells[i][j].left = currentGame->turn;
-        if (j != 0) {  // Fix: Check if j is not at the beginning of the row
-            currentGame->cells[i][j - 1].right = currentGame->turn;
-            currentGame->cells[i][j - 1].fillCount++;
-            flag = checkCellFull(currentGame,i,j-1);
-        }
+
     }
-    currentGame->cells[i][j].fillCount++;
-    if (!(checkCellFull(currentGame, i, j) || flag )) {
-        currentGame->turn = (currentGame->turn == 1) ? 2 : 1;
+    
     }
-    }
-}

@@ -32,7 +32,7 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size);
 
 
 
-void currentGameTurn(gameState *currentGame, char *move, int size , gameState history[] , int count);
+void currentGameTurn(gameState *currentGame, char* typeofMove, int size , gameState history[] , int count);
 
 #endif
 
