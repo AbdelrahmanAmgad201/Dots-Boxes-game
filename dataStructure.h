@@ -19,4 +19,11 @@ typedef struct {
     char player1Name[20];
     char player2Name[20];
 } gameState;
+
+typedef struct {
+    char name[100];
+    int score;
+} LeaderboardEntry;
+
+
 #endif

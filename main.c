@@ -87,6 +87,7 @@
 int main() {
     while(1)
     {
+        char savefiles[5][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefile4.bin","savefile5.bin"};
         char order = printMenuAndGetCommand();
         system("cls");
         if (order == '1') {
@@ -115,7 +116,7 @@ int main() {
                 CheckWinner(game);
                 printf("%s:%d %s:%d\n", game->player1Name , game->score1 ,game->player2Name ,game->score2);
                 printBoard(game->cells, game->size);
-                printf("\n\n1)continue\n2)undo\n3)redo\n");
+                printf("\n\n1)continue\n2)undo\n3)redo\n4)Save\n5)Exit Game\n");
                 (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
                 scanf(" %1s", &typeofMove); 
                 if(typeofMove[0] == '1')
@@ -130,6 +131,18 @@ int main() {
                 else if (typeofMove[0] == '3')
                 {
                     redo(game,history,&counter);
+                }
+                else if (typeofMove[0] == '4')
+                {
+                    int n;
+                    printf("Which File?\n");
+                    scanf("%d",&n);
+                    saveGameState(savefiles[n-1],game);
+                }
+                else if (typeofMove[0] == '5')
+                {
+                    printf("salamo 3leko :)");
+                    return 0;
                 }
                 system("cls");
                 
@@ -159,7 +172,7 @@ int main() {
                 CheckWinner(game);
                 printf("%s:%d %s:%d\n", game->player1Name , game->score1 ,game->player2Name ,game->score2);
                 printBoard(game->cells , game->size);
-                printf("\n\n1)continue\n2)undo\n3)redo\n");
+                printf("\n\n1)Continue\n2)Undo\n3)Redo\n4)Save\n5)Exit Game\n");
                 (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
                 scanf(" %1s", &typeofMove); 
                 if(typeofMove[0] == '1')
@@ -179,8 +192,16 @@ int main() {
                 
             }
         } else if (order == '3') {
-            printf("leaderboard\n");
-        } else if (order == '4') {
+            displayLeaderboard();
+        } 
+        else if (order == '4') {
+        gameState *game = (gameState *)malloc(sizeof(gameState));
+        int n;
+        printf("Which File?\n");
+        scanf("%d",&n);
+        loadGameState(savefiles[n-1],game);
+        }
+        else if (order == '5') {
             printf("Come Again Later <3\n");
             return 0;
         } else {

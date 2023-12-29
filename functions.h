@@ -5,6 +5,22 @@
 #include <stdlib.h>
 #include "dataStructure.h"
 #include "colors.h"
+void saveGameState(const char *filename, const gameState *currentGame);
+
+void loadGameState(const char *filename,gameState *currentGame);
+
+void loadLeaderboard();
+
+void saveLeaderboard();
+
+void saveWinner(const char *name, int score);
+
+void displayLeaderboard();
+
+void CheckForChain (gameState *currentGame, int i, int j);
+
+void checkforempty (gameState *currentGame, int i, int j);
+
 void undo(gameState *currentGame, gameState history[], int *count);
 
 void redo(gameState *currentGame, gameState history[], int *count);
