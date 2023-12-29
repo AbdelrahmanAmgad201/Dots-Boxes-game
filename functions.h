@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include "dataStructure.h"
 #include "colors.h"
-void undo(gameState *currentGame, gameState history[], int *count);
+void undo(gameState *currentGame, gameState history[], int *count ,int size);
 
-void redo(gameState *currentGame, gameState history[], int *count);
+void redo(gameState *currentGame, gameState history[], int *count,int size);
 
 void scanNames(gameState*game);
 
@@ -32,7 +32,7 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size);
 
 
 
-void currentGameTurn(gameState *currentGame, char* typeofMove, int size , gameState history[] , int count);
+void currentGameTurn(gameState *currentGame, char* typeofMove, int size ,gameState history[], int count );
 
 #endif
 

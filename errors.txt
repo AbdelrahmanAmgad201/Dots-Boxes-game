@@ -1,5 +1,4 @@
-1)fix undo / Redo
-2)save/load
-3)leaderBoard
-4)AI
-5)chain
+1)save/load
+2)leaderBoard
+3)AI
+4)chain

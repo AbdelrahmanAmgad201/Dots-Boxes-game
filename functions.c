@@ -1,59 +1,54 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdlib.h>
 #include "dataStructure.h"
 #include "colors.h"
 #include "functions.h"
-// void saveGameState(const char *filename, const gameState *gameState) {
-//     FILE *file = fopen(filename, "wb");
-//     if (file!=NULL) {
-//         // Write the gameState structure to the file
-//         fwrite(gameState, sizeof(gameState), 1, file);
-//         // Write the cell data to the file
-//         for (int i = 0; i < gameState->cellsFilled; i++) {
-//             fwrite(gameState->cells[i], sizeof(cell), 1, file);
-//         }
-//         fclose(file);
-//     } else {
-//         printf("Error opening file '%s' for writing\n", filename);
-//     }
-// }
 
-// // Function to load the game state from a binary file
-// void loadGameState(const char *filename,gameState *gameState) {
-//     FILE *file = fopen(filename,"rb");
-//     if (file!=NULL) {
-//         // Read the gameState structure from the file
-//         fread(gameState,sizeof(gameState), 1, file);
-//         // Allocate memory for cells based on the loaded gameState
-//         gameState->cells = (cell *)malloc(gameState->cellsFilled * sizeof(cell));
-//         for (int i = 0;i<gameState->cellsFilled;i++) {
-//             gameState->cells[i]=(cell*)malloc(sizeof(cell));
-//             fread(gameState->cells[i],sizeof(cell),1,file);
-//         }
-//         fclose(file);
-//     } else {
-//         printf("Error opening file '%s' for reading\n", filename);
-//     }
-// }
-
-
-void undo(gameState *currentGame, gameState history[], int *count)
+void undo(gameState *currentGame, gameState history[], int *count , int size)
 {
-    if ((*count) > 0 && (currentGame->turn == history[(*count) - 1].turn))
+    if ((*count) > 0 && (currentGame->turn == history[(*count)-1].turn))
     {
-        (*count)--;
-        *currentGame = history[*count];
+                (*count)--;
+                printf("UNDOO");
+                currentGame->score1 = history[*count].score1;
+                currentGame->score2 = history[*count].score2;
+                currentGame->cellsFilled = history[*count].cellsFilled;
+                strcpy(currentGame->player1Name , history[*count].player1Name);
+                strcpy(currentGame->player2Name , history[*count].player2Name);
+                for(int i = 0 ; i<size ; i++)
+                {
+                    for(int j = 0 ; j<size ; j++)
+                    {
+                        currentGame->cells[i][j] = history[*count].cells[i][j];
+                    }
+                }
+    }
+    else{
+        printf("No valid Undo");
     }
 
 }
 
-void redo(gameState *currentGame, gameState history[], int *count)
+void redo(gameState *currentGame, gameState history[], int *count,int size)
 {
     if (history[(*count) + 1].turn != 0)
     {
         (*count)++;
-        *currentGame = history[*count];
+        currentGame->score1 = history[*count].score1;
+        currentGame->score2 = history[*count].score2;
+        currentGame->cellsFilled = history[*count].cellsFilled;
+        strcpy(currentGame->player1Name , history[*count].player1Name);
+        strcpy(currentGame->player2Name , history[*count].player2Name);
+        for(int i = 0 ; i<size ; i++)
+        {
+            for(int j = 0 ; j<size ; j++)
+            {
+                currentGame->cells[i][j] = history[*count].cells[i][j];
+            }
+        }
+        
 
     }
 }
@@ -207,19 +202,8 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size)
 }
 
 
-void currentGameTurn(gameState *currentGame, char *typeofMove, int size , gameState history[] , int count) {
-    if(typeofMove[0] == '2')
-    {
-        undo(currentGame,history, &count);
-        printf("undo");
-    }
-    else if(typeofMove[0] == '3')
-    {
-        redo(currentGame,history, &count);
-        printf("redo");
-    }
-    else if(typeofMove[0] == '1' )
-    {
+void currentGameTurn(gameState *currentGame, char *typeofMove, int size , gameState history[], int count ) {
+   
         printf("Enter Your Move:");
         char move[5];
         scanf(" %3s", move);    
@@ -265,4 +249,4 @@ void currentGameTurn(gameState *currentGame, char *typeofMove, int size , gameSt
 
     }
     
-    }
+    
