@@ -6,7 +6,7 @@
 #include "colors.h"
 #include "functions.h"
 
-void undo(gameState *currentGame, gameState history[], int *count , int size)
+void undo(gameState *currentGame, gameState history[], int *count)
 {
     if ((*count) > 0 && (currentGame->turn == history[(*count)-1].turn))
     {
@@ -17,9 +17,9 @@ void undo(gameState *currentGame, gameState history[], int *count , int size)
                 currentGame->cellsFilled = history[*count].cellsFilled;
                 strcpy(currentGame->player1Name , history[*count].player1Name);
                 strcpy(currentGame->player2Name , history[*count].player2Name);
-                for(int i = 0 ; i<size ; i++)
+                for(int i = 0 ; i<currentGame->size ; i++)
                 {
-                    for(int j = 0 ; j<size ; j++)
+                    for(int j = 0 ; j<currentGame->size ; j++)
                     {
                         currentGame->cells[i][j] = history[*count].cells[i][j];
                     }
@@ -31,7 +31,7 @@ void undo(gameState *currentGame, gameState history[], int *count , int size)
 
 }
 
-void redo(gameState *currentGame, gameState history[], int *count,int size)
+void redo(gameState *currentGame, gameState history[], int *count)
 {
     if (history[(*count) + 1].turn != 0)
     {
@@ -41,9 +41,9 @@ void redo(gameState *currentGame, gameState history[], int *count,int size)
         currentGame->cellsFilled = history[*count].cellsFilled;
         strcpy(currentGame->player1Name , history[*count].player1Name);
         strcpy(currentGame->player2Name , history[*count].player2Name);
-        for(int i = 0 ; i<size ; i++)
+        for(int i = 0 ; i<currentGame->size ; i++)
         {
-            for(int j = 0 ; j<size ; j++)
+            for(int j = 0 ; j<currentGame->size ; j++)
             {
                 currentGame->cells[i][j] = history[*count].cells[i][j];
             }
@@ -69,7 +69,7 @@ char printMenuAndGetCommand() {
     return command;
 }
 
-void createArr(gameState *game, int size) { //create 2d array of cells
+void createArr(gameState *game , int size) { //create 2d array of cells
     game->cells = (cell **)malloc(size * sizeof(cell *));
     for (int i = 0; i < size; i++) {
         // Allocate and initialize memory for each row using calloc
@@ -159,7 +159,8 @@ int checkCellFull(gameState *currentGame, int i, int j) {
 
     return 0;
 }
-void CheckWinner(gameState *currentGame , int size) {
+void CheckWinner(gameState *currentGame) {
+    int size = currentGame->size;
     if(currentGame->cellsFilled == size*size)
     {
         if(currentGame->score1 > currentGame->score2)
@@ -181,8 +182,9 @@ void CheckWinner(gameState *currentGame , int size) {
     }
    
 }
-void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size)
+void checkValidity(gameState* currentGame, int* i, int* j, char* k)
 {
+    int size = currentGame->size;
     while (*i > size - 1 || *i < 0 || *j > size - 1 || *j < 0 ||
            (*k != 'u' && *k != 'b' && *k != 'r' && *k != 'l') ||
            (*k == 'u' && currentGame->cells[*i][*j].up != 0) ||
@@ -196,14 +198,14 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k, int size)
         *i = (newMove[0] - '0') - 1;
         *j = (newMove[1] - '0') - 1;
         *k = newMove[2];
-        checkValidity(currentGame,i,j,k,size);
+        checkValidity(currentGame,i,j,k);
 
     }
 }
 
 
-void currentGameTurn(gameState *currentGame, char *typeofMove, int size , gameState history[], int count ) {
-   
+void currentGameTurn(gameState *currentGame, char *typeofMove, gameState history[], int count ) {
+        int size = currentGame->size ;
         printf("Enter Your Move:");
         char move[5];
         scanf(" %3s", move);    
@@ -211,7 +213,7 @@ void currentGameTurn(gameState *currentGame, char *typeofMove, int size , gameSt
         int j = (move[1] - '0') - 1;
         char k = move[2];
         int flag = 0;
-        checkValidity(currentGame,&i,&j,&k,size);
+        checkValidity(currentGame,&i,&j,&k);
         if (k == 'u') {
             currentGame->cells[i][j].up = currentGame->turn;
             if (i != 0) {

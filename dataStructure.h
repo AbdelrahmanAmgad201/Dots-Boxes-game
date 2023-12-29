@@ -9,6 +9,7 @@ typedef struct {
 } cell;
 
 typedef struct {
+    int size; // 2 or 5
     int time;
     int score1;
     int score2;
