@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "dataStructure.h"
 #include "colors.h"
+void printData(gameState*currentGame);
 
 int computerTurn(gameState*currentGame, int target);
 
@@ -45,7 +46,7 @@ void printBoard(cell **cells , int size) ;
 int checkCellFull(gameState *currentGame, int i, int j) ;
 
 
-void CheckWinner(gameState *currentGame ) ;
+int CheckWinner(gameState *currentGame ) ;
 
 void checkValidity(gameState* currentGame, int* i, int* j, char* k);
 

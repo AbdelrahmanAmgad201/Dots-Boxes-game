@@ -5,10 +5,19 @@
 #include "dataStructure.h"
 #include "colors.h"
 #include "functions.h"
+void printData(gameState*currentGame)
+{
+    printf("\n");
+    printf(RED"%s score: %d\n"RESET,currentGame->player1Name,currentGame->score1);
+    printf(BLUE"%s score: %d\n"RESET,currentGame->player2Name,currentGame->score2);
+    printf(YELLOW"Cells Left: %d\n"RESET,currentGame->size*currentGame->size-currentGame->cellsFilled);
+    printf(YELLOW"Time Passed: %d\n"RESET,currentGame->time);
+}
 void saveGameState(const char *filename, const gameState *currentGame) {
     FILE *file = fopen(filename, "wb");
     if (file != NULL) {
         fwrite(&currentGame->size,sizeof(int),1,file);
+        fwrite(&currentGame->flagComp,sizeof(int),1,file);
         fwrite(&currentGame->score1, sizeof(int), 1, file);
         fwrite(&currentGame->score2, sizeof(int), 1, file);
         fwrite(&currentGame->time, sizeof(int), 1, file);
@@ -32,6 +41,7 @@ void loadGameState(const char *filename, gameState *currentGame) {
     FILE *file = fopen(filename, "rb");
     if (file != NULL) { 
         fread(&currentGame->size, sizeof(int), 1, file);
+        fread(&currentGame->flagComp,sizeof(int),1,file);
         currentGame->cells = (cell**)malloc(currentGame->size * sizeof(cell*));
         for (int i = 0; i < currentGame->size; i++) {
             currentGame->cells[i] = (cell*)malloc(currentGame->size * sizeof(cell));
@@ -61,6 +71,7 @@ void loadGameState(const char *filename, gameState *currentGame) {
             }
             }
         fclose(file);
+        printf("ERROR");
     } else {
         printf("Error opening file '%s' for reading\n", filename);
     }
@@ -296,28 +307,36 @@ int checkCellFull(gameState *currentGame, int i, int j) {
 
     return 0;
 }
-void CheckWinner(gameState *currentGame) {
+int CheckWinner(gameState *currentGame) {
     int size = currentGame->size;
-    if(currentGame->cellsFilled == size*size)
-    {
-        if(currentGame->score1 > currentGame->score2)
-        {
-            printf(RED "%s "RESET"is the Winner !!",currentGame->player1Name);
-            saveWinner(currentGame->player1Name,currentGame->score1);
-            exit(0);
-            
-        }
-        else if(currentGame->score1 < currentGame->score2){
-            printf(BLUE "%s "RESET"is the Winner !!",currentGame->player2Name);
-            saveWinner(currentGame->player2Name,currentGame->score2);
-            exit(0);
-
-        }
-        else{
+    if (currentGame->cellsFilled == size * size) {
+        printf(MAGENTA"   DOTS AND BOXES\n"RESET);
+        printBoard(currentGame->cells, currentGame->size);
+        printf("\n");
+        printData(currentGame);
+        if (currentGame->score1 > currentGame->score2) {
+            printf(RED "%s "RESET"is the Winner !!", currentGame->player1Name);
+            saveWinner(currentGame->player1Name, currentGame->score1);
+        } else if (currentGame->score1 < currentGame->score2) {
+            printf(BLUE "%s "RESET"is the Winner !!", currentGame->player2Name);
+            saveWinner(currentGame->player2Name, currentGame->score2);
+        } else {
             printf(RED"DR"BLUE"AW"RESET" :(");
-            exit(0);
         }
 
+        printf("\n1) Play Again\n2) Exit Game\n");
+        char input;
+        scanf(" %c", &input);
+        if (input == '1') {
+            return (1);
+        } else if (input == '2') {
+            
+            exit(0);
+        } else {
+            // Invalid input, handle accordingly
+            printf("Invalid input. Exiting game.\n");
+            exit(1);
+        }
     }
    
 }

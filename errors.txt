@@ -1,2 +1,4 @@
-1)AI
-2)chain
+1)chain
+2)error checking
+3)AI no need for 1 
+4)error when loading non-existing files

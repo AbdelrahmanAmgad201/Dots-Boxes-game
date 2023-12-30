@@ -6,16 +6,8 @@
 #include "dataStructure.h"
 #include "colors.h"
 #include "functions.h"
-char savefiles[5][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefile4.bin","savefile5.bin"};
+char savefiles[10][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefile4.bin","savefile5.bin","savefile6.bin","savefile7.bin","savefile8.bin","savefile9.bin","savefile10.bin"};
 
-void printData(gameState*currentGame)
-{
-    printf("\n");
-    printf(RED"%s score: %d\n"RESET,currentGame->player1Name,currentGame->score1);
-    printf(BLUE"%s score: %d\n"RESET,currentGame->player2Name,currentGame->score2);
-    printf(YELLOW"Cells Left: %d\n"RESET,currentGame->size*currentGame->size-currentGame->cellsFilled);
-    printf(YELLOW"Time Passed: %d\n"RESET,currentGame->time);
-}
  void updateHistory(gameState*game , gameState history[] ,int counter)
  {
             history[counter].flagComp = game->flagComp;
@@ -50,11 +42,12 @@ void printData(gameState*currentGame)
                 }
 
  }
- void gameLoop(gameState*game , int size , int historySize,int loaded)
- {
+ int gameLoop(gameState*game , int size , int historySize,int loaded)
+ {          int mode;
+            if (loaded==0){
             printf("1)Multiplayer\n2)Vs AI\n");
-            int mode ;
             scanf("%d",&mode);
+            }
             char typeofMove[2] = "1";
             game->size = size ;
             if (loaded==0)
@@ -63,10 +56,13 @@ void printData(gameState*currentGame)
             {
                 game->flagComp = 1;
             }
-            else { game->flagComp == 0;}    
+            else { game->flagComp == 0;}  
+            if (loaded==0)
+            {  
             createArr(game , game->size);
             scanNames(game);
             initializeGameState(game);
+            }
             }
             system("cls");
             gameState history[historySize];
@@ -84,7 +80,11 @@ void printData(gameState*currentGame)
                     updateHistory(game , history ,counter);
                 }
                 
-                CheckWinner(game);
+                int replay = CheckWinner(game);
+                if (replay==1)
+                {
+                    return 1;
+                }
                 printf(MAGENTA"   DOTS AND BOXES\n"RESET);
                 printBoard(game->cells, game->size);
                 printData(game);
@@ -126,19 +126,28 @@ void printData(gameState*currentGame)
 
 
 int main() {
-    
     while(1)
-    { 
+    {   
+        int replay;
         char order = printMenuAndGetCommand();
         system("cls");
         if (order == '1') {
             gameState *game = (gameState *)malloc(sizeof(gameState));     
-            gameLoop(game,2,13,0);
+        replay = gameLoop(game,2,13,0);
+           if (replay==1)
+        {   system("cls");
+            continue;
+        }
             free(game);
             } else if (order == '2') {
             char typeofMove[2];
             gameState *game = (gameState *)malloc(sizeof(gameState));
-            gameLoop(game , 5 ,61,0); 
+            replay = gameLoop(game , 5 ,61,0); 
+            if (replay==1)
+        {
+            system("cls");
+            continue;
+        }
             free(game);          
         } else if (order == '3') {
             displayLeaderboard();
@@ -148,9 +157,23 @@ int main() {
         int n;
         printf("Which File?\n");
         scanf("%d",&n);
+        if (n>0&&n<=10)
+        {
         loadGameState(savefiles[n-1],game);
-        //printf("x");
-        gameLoop(game,game->size,61,1);
+        replay = gameLoop(game,game->size,61,1);
+        free(game);
+        }
+        else
+        {
+        system("cls");
+        printf("File not found\n");
+        continue;
+        }
+        if (replay==1)
+        {   
+            system("cls");
+            continue;
+        }
        // printf("y");
         free(game);
         }
@@ -162,6 +185,5 @@ int main() {
             return 1;
         }
 
-        }
-    
+        }  
 }
