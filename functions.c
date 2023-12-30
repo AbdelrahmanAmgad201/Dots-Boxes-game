@@ -184,8 +184,8 @@ void scanNames(gameState*game)
     printf("player 1 name: ");
     scanf("%s",game->player1Name);
     if (game->flagComp == 0){
-    printf("player 2 name: ");
-    scanf("%s",game->player2Name);
+        printf("player 2 name: ");
+        scanf("%s",game->player2Name);
     }
     else if(game->flagComp == 1)
     {
