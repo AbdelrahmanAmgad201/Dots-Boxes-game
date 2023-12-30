@@ -75,6 +75,7 @@ void loadGameState(const char *filename, gameState *currentGame) {
         printf("ERROR");
     } else {
         printf("Error opening file '%s' for reading\n", filename);
+        exit(0);
     }
 }
 LeaderboardEntry leaderboard[10];
