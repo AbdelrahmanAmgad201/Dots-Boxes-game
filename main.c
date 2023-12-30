@@ -85,18 +85,12 @@ char savefiles[10][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefil
                 {
                     return 1;
                 }
-                printf(MAGENTA"    DOTS AND BOXES\n"RESET);
+                printf(MAGENTA"   DOTS AND BOXES\n"RESET);
                 printBoard(game->cells, game->size);
                 printData(game);
-                if(game->turn == 2 && game->flagComp == 1)
-                {
-                    typeofMove[0] = '1';
-                }
-                else{
                 printf("\n\n1)continue\n2)undo\n3)redo\n4)Save\n5)Exit Game\n");
                 (game->turn == 1) ? printf("\n%s: ", game->player1Name) : printf("\n%s: ", game->player2Name);
                 scanf(" %1s", &typeofMove); 
-                }
                 if(typeofMove[0] == '1')
                 {
                     currentGameTurn(game, typeofMove,history,counter);
@@ -113,13 +107,13 @@ char savefiles[10][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefil
                 else if (typeofMove[0] == '4')
                 {
                     int n;
-                    printf("File number:\n");
+                    printf("Which File?\n");
                     scanf("%d",&n);
                     saveGameState(savefiles[n-1],game);
                 }
                 else if (typeofMove[0] == '5')
                 {
-                    printf("Come Again Later <3\n");
+                    printf("salamo 3leko :)");
                     exit(0);
                 }
                 clock_t endTime = clock();
