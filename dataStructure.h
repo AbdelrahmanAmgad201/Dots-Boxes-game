@@ -18,6 +18,7 @@ typedef struct {
     cell **cells; // 2d array of structs either 2*2 or 5*2
     char player1Name[20];
     char player2Name[20];
+    int flagComp;
 } gameState;
 
 typedef struct {

@@ -193,6 +193,7 @@ void initializeGameState(gameState *game) { //initialize the game state at the b
     game->time = 0;
     game->turn = 1;
     game->cellsFilled = 0;
+    game->flagComp = 0;
 }
 
 void printBoard(cell **cells, int size) {
