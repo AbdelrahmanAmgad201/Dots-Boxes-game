@@ -93,16 +93,17 @@ void printData(gameState*currentGame)
                 }
 
  }
- void gameLoop(gameState*game , int size , int historySize)
+ void gameLoop(gameState*game , int size , int historySize,int loaded)
  {
             char typeofMove[2] = "1";
             game->size = size ;
+            if (loaded==0)
+            {
             createArr(game , game->size);
             scanNames(game);
-            system("cls");
-           
             initializeGameState(game);
-            
+            }
+            system("cls");
             gameState history[historySize];
             int counter = 0 ;
             for(int i = 0 ; i<historySize ; i++)
@@ -167,12 +168,12 @@ int main() {
         system("cls");
         if (order == '1') {
             gameState *game = (gameState *)malloc(sizeof(gameState)); 
-            gameLoop(game,2,13);
+            gameLoop(game,2,13,0);
             free(game);
             } else if (order == '2') {
             char typeofMove[2];
             gameState *game = (gameState *)malloc(sizeof(gameState));
-            gameLoop(game , 5 ,61); 
+            gameLoop(game , 5 ,61,0); 
             free(game);          
         } else if (order == '3') {
             displayLeaderboard();
@@ -182,10 +183,12 @@ int main() {
         int n;
         printf("Which File?\n");
         scanf("%d",&n);
+        //printf("z");
+        initializeGameState(game);
         loadGameState(savefiles[n-1],game);
-        printf("x");
-        gameLoop(game,game->size,61);
-        printf("y");
+        //printf("x");
+        gameLoop(game,game->size,61,1);
+       // printf("y");
         free(game);
         }
         else if (order == '5') {

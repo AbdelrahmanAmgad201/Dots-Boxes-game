@@ -32,11 +32,16 @@ void loadGameState(const char *filename, gameState *currentGame) {
     FILE *file = fopen(filename, "rb");
     if (file != NULL) { 
         fread(&currentGame->size, sizeof(int), 1, file);
-        for (int i=0;i<currentGame->size;i++)
-        {
-            free(currentGame->cells[i]);
+        currentGame->cells = (cell**)malloc(currentGame->size * sizeof(cell*));
+        for (int i = 0; i < currentGame->size; i++) {
+            currentGame->cells[i] = (cell*)malloc(currentGame->size * sizeof(cell));
         }
+        if (currentGame->cells != NULL) {
+         for (int i = 0; i < currentGame->size; i++) {
+        free(currentGame->cells[i]);
+            }
         free(currentGame->cells);
+        }
         currentGame->cells=(cell**)malloc(currentGame->size*sizeof(cell*));
         for (int i=0;i<currentGame->size;i++)
         {
@@ -54,7 +59,7 @@ void loadGameState(const char *filename, gameState *currentGame) {
             {
             fread(&currentGame->cells[i][j], sizeof(cell), 1, file);
             }
-}
+            }
         fclose(file);
     } else {
         printf("Error opening file '%s' for reading\n", filename);
