@@ -127,7 +127,8 @@ char savefiles[10][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefil
 
 int main() {
     while(1)
-    {   
+    {    
+        printf("sba7 el 5er");
         int replay;
         char order = printMenuAndGetCommand();
         system("cls");
