@@ -1,3 +1,4 @@
+#include<ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -179,19 +180,25 @@ void redo(gameState *currentGame, gameState history[], int *count)
     }
 }
 
-void scanNames(gameState*game)
-{
-    printf("player 1 name: ");
-    scanf("%s",game->player1Name);
-    if (game->flagComp == 0){
-    printf("player 2 name: ");
-    scanf("%s",game->player2Name);
+void scanNames(gameState *game) {
+    printf("Player 1 name: ");
+    scanf("%19s", game->player1Name);
+    while (getchar() != '\n');  // Consume remaining characters in the input buffer
+
+    if (game->flagComp == 0) {
+        printf("Player 2 name: ");
+        scanf("%19s", game->player2Name);
+        while (getchar() != '\n');  // Consume remaining characters in the input buffer
+    } else if (game->flagComp == 1) {
+        strcpy(game->player2Name, "computer");
     }
-    else if(game->flagComp == 1)
-    {
-        strcpy(game->player2Name , "Computer");
+    for (int i = 0; game->player1Name[i] != '\0'; i++) {
+        game->player1Name[i] = tolower(game->player1Name[i]);
     }
 
+    for (int i = 0; game->player2Name[i] != '\0'; i++) {
+        game->player2Name[i] = tolower(game->player2Name[i]);
+    }
 }
 
 char printMenuAndGetCommand() {
@@ -302,11 +309,31 @@ int checkCellFull(gameState *currentGame, int i, int j) {
     if (currentGame->cells[i][j].fillCount == 4) {
         (currentGame->turn == 1) ? (currentGame->score1++) : (currentGame->score2++);
         currentGame->cellsFilled++;
+        currentGame->cells[i][j].up = currentGame->turn;
+        currentGame->cells[i][j].bottom = currentGame->turn;
+        currentGame->cells[i][j].left = currentGame->turn;
+        currentGame->cells[i][j].right = currentGame->turn;
+
+        // Update neighboring cells
+        if (i != 0) {
+            currentGame->cells[i - 1][j].bottom = currentGame->turn;
+        }
+        if (i != currentGame->size - 1) {
+            currentGame->cells[i + 1][j].up = currentGame->turn;
+        }
+        if (j != 0) {
+            currentGame->cells[i][j - 1].right = currentGame->turn;
+        }
+        if (j != currentGame->size - 1) {
+            currentGame->cells[i][j + 1].left = currentGame->turn;
+        }
+
         return 1;
     }
 
     return 0;
 }
+
 int CheckWinner(gameState *currentGame) {
     int size = currentGame->size;
     if (currentGame->cellsFilled == size * size) {
@@ -343,6 +370,7 @@ int CheckWinner(gameState *currentGame) {
 void checkValidity(gameState* currentGame, int* i, int* j, char* k)
 {
     int size = currentGame->size;
+
     while (*i > size - 1 || *i < 0 || *j > size - 1 || *j < 0 ||
            (*k != 'u' && *k != 'b' && *k != 'r' && *k != 'l') ||
            (*k == 'u' && currentGame->cells[*i][*j].up != 0) ||
@@ -350,24 +378,26 @@ void checkValidity(gameState* currentGame, int* i, int* j, char* k)
            (*k == 'r' && currentGame->cells[*i][*j].right != 0) ||
            (*k == 'l' && currentGame->cells[*i][*j].left != 0))
     {
-        printf("Invalid input! Please enter a valid command: ");
+        printf(RED"Please enter a valid command: "RESET);
+
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF);
+
         char newMove[5];
         fgets(newMove, sizeof(newMove), stdin);
         *i = (newMove[0] - '0') - 1;
         *j = (newMove[1] - '0') - 1;
         *k = newMove[2];
-        checkValidity(currentGame,i,j,k);
-
     }
 }
 
 
-void currentGameTurn(gameState *currentGame, char *typeofMove, gameState history[], int count ) {
+
+void currentGameTurn(gameState *currentGame,gameState history[], int count ) {
         for(int i = count+1 ; history[i].turn != 0 ;i++)
         {
             history[i].turn = 0 ;
         }
-        printf("%d\n %d\n",currentGame->turn , currentGame->flagComp);
         if((currentGame->flagComp) == 1 && (currentGame->turn == 2))
         {
             int x = 1;
@@ -477,6 +507,7 @@ int computerTurn(gameState*currentGame, int target)
     }
     return flag;
 }
+
 
     
     

@@ -1,3 +1,2 @@
 1)chain
-2)error checking
-4)error when loading non-existing files
+2)error when loading non-existing files
