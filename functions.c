@@ -1,11 +1,5 @@
-#include<ctype.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-#include "dataStructure.h"
-#include "colors.h"
 #include "functions.h"
+
 void printData(gameState*currentGame)
 {
     printf("\n");
@@ -14,126 +8,8 @@ void printData(gameState*currentGame)
     printf(YELLOW"Cells Left: %d\n"RESET,currentGame->size*currentGame->size-currentGame->cellsFilled);
     printf(YELLOW"Time Passed: %d\n"RESET,currentGame->time);
 }
-void saveGameState(const char *filename, const gameState *currentGame) {
-    FILE *file = fopen(filename, "wb");
-    if (file != NULL) {
-        fwrite(&currentGame->size,sizeof(int),1,file);
-        fwrite(&currentGame->flagComp,sizeof(int),1,file);
-        fwrite(&currentGame->score1, sizeof(int), 1, file);
-        fwrite(&currentGame->score2, sizeof(int), 1, file);
-        fwrite(&currentGame->time, sizeof(int), 1, file);
-        fwrite(&currentGame->turn, sizeof(int), 1, file);
-        fwrite(&currentGame->cellsFilled, sizeof(int), 1, file);
-        fwrite(currentGame->player1Name, sizeof(char), 20, file);
-        fwrite(currentGame->player2Name, sizeof(char), 20, file);
-        for (int i = 0; i < currentGame->size; i++) {
-            for (int j=0;j<currentGame->size;j++)
-            {
-            fwrite(&currentGame->cells[i][j], sizeof(cell), 1, file);
-            }
-}
 
-        fclose(file);
-    } else {
-        printf("Error opening file '%s' for writing\n", filename);
-    }
-}
-void loadGameState(const char *filename, gameState *currentGame) {
-    FILE *file = fopen(filename, "rb");
-    if (file != NULL) { 
-        fread(&currentGame->size, sizeof(int), 1, file);
-        fread(&currentGame->flagComp,sizeof(int),1,file);
-        currentGame->cells = (cell**)malloc(currentGame->size * sizeof(cell*));
-        for (int i = 0; i < currentGame->size; i++) {
-            currentGame->cells[i] = (cell*)malloc(currentGame->size * sizeof(cell));
-        }
-        if (currentGame->cells != NULL) {
-         for (int i = 0; i < currentGame->size; i++) {
-        free(currentGame->cells[i]);
-            }
-        free(currentGame->cells);
-        }
-        currentGame->cells=(cell**)malloc(currentGame->size*sizeof(cell*));
-        for (int i=0;i<currentGame->size;i++)
-        {
-            currentGame->cells[i]=(cell*)malloc(currentGame->size*sizeof(cell));
-        }
-        fread(&currentGame->score1, sizeof(int), 1, file);
-        fread(&currentGame->score2, sizeof(int), 1, file);
-        fread(&currentGame->time, sizeof(int), 1, file);
-        fread(&currentGame->turn, sizeof(int), 1, file);
-        fread(&currentGame->cellsFilled, sizeof(int), 1, file);
-        fread(currentGame->player1Name, sizeof(char), 20, file);
-        fread(currentGame->player2Name, sizeof(char), 20, file);
-        for (int i = 0; i < currentGame->size; i++) {
-            for (int j=0;j<currentGame->size;j++)
-            {
-            fread(&currentGame->cells[i][j], sizeof(cell), 1, file);
-            }
-            }
-        fclose(file);
-        printf("ERROR");
-    } else {
-        printf("Error opening file '%s' for reading\n", filename);
-        exit(0);
-    }
-}
-LeaderboardEntry leaderboard[10];
-void loadLeaderboard() {
-    FILE *file = fopen("leaderboard.txt", "r");
 
-    if (file != NULL) {
-        for (int i = 0; i < 10 && fscanf(file, "%s  %d", leaderboard[i].name, &leaderboard[i].score) == 2; i++) {
-            // Load only up to 10 entries
-        }
-        fclose(file);
-    }
-}
-
-void saveLeaderboard() {
-    FILE *file = fopen("leaderboard.txt", "w");
-
-    for (int i = 0; i < 10; i++) {
-        fprintf(file, "%s %d\n", leaderboard[i].name, leaderboard[i].score);
-    }
-
-    fclose(file);
-}
-
-void saveWinner(const char *name, int score) {
-    loadLeaderboard();
-
-    // Add the new winner to the leaderboard
-    strcpy(leaderboard[10 - 1].name, name);
-    leaderboard[10 - 1].score = score;
-
-    // Sort the leaderboard in descending order based on scores
-    for (int i = 0; i < 10 - 1; i++) {
-        for (int j = i + 1; j < 10; j++) {
-            if (leaderboard[i].score < leaderboard[j].score) {
-                // Swap entries
-                LeaderboardEntry temp = leaderboard[i];
-                leaderboard[i] = leaderboard[j];
-                leaderboard[j] = temp;
-            }
-        }
-    }
-
-    // Save the updated leaderboard to the file
-    saveLeaderboard();
-}
-
-void displayLeaderboard() {
-    loadLeaderboard();
-    printf("   Leaderboard\n");
-    int rank = 1;
-    for (int i = 0; i < 10; i++) {
-        if (strlen(leaderboard[i].name) > 0 && leaderboard[i].score != 0) {
-            printf("%d) %s : %d\n", rank, leaderboard[i].name, leaderboard[i].score);
-            rank++;
-        }
-    }
-}
 void undo(gameState *currentGame, gameState history[], int *count)
 {
     if ((*count) > 0 )

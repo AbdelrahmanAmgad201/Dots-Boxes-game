@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include "dataStructure.h"
-#include "colors.h"
 #include "functions.h"
+#include "saveLoad.h"
+#include "leaderboard.h"
 
 char savefiles[10][14] = {
   "savefile1.bin",
