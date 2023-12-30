@@ -7,51 +7,7 @@
 #include "colors.h"
 #include "functions.h"
 char savefiles[5][14]={"savefile1.bin","savefile2.bin","savefile3.bin","savefile4.bin","savefile5.bin"};
-// void computerTurn(gameState*currentGame, int size)
-// {
-//     for(int i = 0 ; i <size ; i++)
-//     {
-//         for(int j = 0 ; j<size ;j++)
-//         {
-//             if(currentGame->cells[i][j].fillCount == 3)
-//             {
-//                 if(currentGame->cells[i][j].up == 0)
-//                 {
-//                     currentGame->cells[i][j].up = 2;
-//                     if (i != 0) {
-//                         currentGame->cells[i - 1][j].bottom = currentGame->turn;
-//                         currentGame->cells[i - 1][j].fillCount++;                
-//                     }   
-//                 }
-//                 else if(currentGame->cells[i][j].bottom == 0)
-//                 {
-//                     currentGame->cells[i][j].bottom = 2;
-//                      if (i != size - 1) {
-//                         currentGame->cells[i + 1][j].up = currentGame->turn;
-//                         currentGame->cells[i + 1][j].fillCount++;
-//                      }
-//                 }
-//                 else if(currentGame->cells[i][j].left == 0)
-//                 {
-//                     currentGame->cells[i][j].left = 2;
-//                     if (j != 0) {  // Fix: Check if j is not at the beginning of the row
-//                         currentGame->cells[i][j - 1].right = currentGame->turn;
-//                         currentGame->cells[i][j - 1].fillCount++;
-//                     }    
-//                 }
-//                 else{
-//                     currentGame->cells[i][j].right = 2;
-//                     if (j != size - 1) {
-//                         currentGame->cells[i][j + 1].left = currentGame->turn;
-//                         currentGame->cells[i][j + 1].fillCount++;
-//                     }
-//                 }
-                
 
-//             }
-//         }
-//     }
-// }
 void printData(gameState*currentGame)
 {
     printf("\n");
@@ -62,6 +18,7 @@ void printData(gameState*currentGame)
 }
  void updateHistory(gameState*game , gameState history[] ,int counter)
  {
+            history[counter].flagComp = game->flagComp;
             history[counter].size = game->size;
             history[counter].turn = game->turn;
             history[counter].score1 = game->score1;
@@ -93,16 +50,25 @@ void printData(gameState*currentGame)
                 }
 
  }
- void gameLoop(gameState*game , int size , int historySize)
+ void gameLoop(gameState*game , int size , int historySize,int loaded)
  {
+            printf("1)Multiplayer\n2)Vs AI\n");
+            int mode ;
+            scanf("%d",&mode);
             char typeofMove[2] = "1";
             game->size = size ;
+            if (loaded==0)
+            {
+            if(mode == 2)
+            {
+                game->flagComp = 1;
+            }
+            else { game->flagComp == 0;}    
             createArr(game , game->size);
             scanNames(game);
-            system("cls");
-           
             initializeGameState(game);
-            
+            }
+            system("cls");
             gameState history[historySize];
             int counter = 0 ;
             for(int i = 0 ; i<historySize ; i++)
@@ -162,17 +128,17 @@ void printData(gameState*currentGame)
 int main() {
     
     while(1)
-    {   system("cls");
+    { 
         char order = printMenuAndGetCommand();
         system("cls");
         if (order == '1') {
-            gameState *game = (gameState *)malloc(sizeof(gameState)); 
-            gameLoop(game,2,13);
+            gameState *game = (gameState *)malloc(sizeof(gameState));     
+            gameLoop(game,2,13,0);
             free(game);
             } else if (order == '2') {
             char typeofMove[2];
             gameState *game = (gameState *)malloc(sizeof(gameState));
-            gameLoop(game , 5 ,61); 
+            gameLoop(game , 5 ,61,0); 
             free(game);          
         } else if (order == '3') {
             displayLeaderboard();
@@ -183,9 +149,9 @@ int main() {
         printf("Which File?\n");
         scanf("%d",&n);
         loadGameState(savefiles[n-1],game);
-        printf("x");
-        gameLoop(game,game->size,61);
-        printf("y");
+        //printf("x");
+        gameLoop(game,game->size,61,1);
+       // printf("y");
         free(game);
         }
         else if (order == '5') {

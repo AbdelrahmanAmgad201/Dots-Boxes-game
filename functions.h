@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include "dataStructure.h"
 #include "colors.h"
+
+int computerTurn(gameState*currentGame, int target);
+
 void saveGameState(const char *filename, const gameState *currentGame);
 
 void loadGameState(const char *filename,gameState *currentGame);
@@ -14,7 +17,7 @@ void loadLeaderboard();
 void saveLeaderboard();
 
 void saveWinner(const char *name, int score);
-
+ void placeLine (gameState*currentGame, int i , int j , char k );
 void displayLeaderboard();
 
 void CheckForChain (gameState *currentGame, int i, int j);

@@ -32,11 +32,16 @@ void loadGameState(const char *filename, gameState *currentGame) {
     FILE *file = fopen(filename, "rb");
     if (file != NULL) { 
         fread(&currentGame->size, sizeof(int), 1, file);
-        for (int i=0;i<currentGame->size;i++)
-        {
-            free(currentGame->cells[i]);
+        currentGame->cells = (cell**)malloc(currentGame->size * sizeof(cell*));
+        for (int i = 0; i < currentGame->size; i++) {
+            currentGame->cells[i] = (cell*)malloc(currentGame->size * sizeof(cell));
         }
+        if (currentGame->cells != NULL) {
+         for (int i = 0; i < currentGame->size; i++) {
+        free(currentGame->cells[i]);
+            }
         free(currentGame->cells);
+        }
         currentGame->cells=(cell**)malloc(currentGame->size*sizeof(cell*));
         for (int i=0;i<currentGame->size;i++)
         {
@@ -54,7 +59,7 @@ void loadGameState(const char *filename, gameState *currentGame) {
             {
             fread(&currentGame->cells[i][j], sizeof(cell), 1, file);
             }
-}
+            }
         fclose(file);
     } else {
         printf("Error opening file '%s' for reading\n", filename);
@@ -167,8 +172,14 @@ void scanNames(gameState*game)
 {
     printf("player 1 name: ");
     scanf("%s",game->player1Name);
+    if (game->flagComp == 0){
     printf("player 2 name: ");
     scanf("%s",game->player2Name);
+    }
+    else if(game->flagComp == 1)
+    {
+        strcpy(game->player2Name , "Computer");
+    }
 
 }
 
@@ -193,7 +204,6 @@ void initializeGameState(gameState *game) { //initialize the game state at the b
     game->time = 0;
     game->turn = 1;
     game->cellsFilled = 0;
-    game->flagComp = 0;
 }
 
 void printBoard(cell **cells, int size) {
@@ -338,15 +348,44 @@ void currentGameTurn(gameState *currentGame, char *typeofMove, gameState history
         {
             history[i].turn = 0 ;
         }
-        int size = currentGame->size ;
-        printf("Enter Your Move:");
-        char move[5];
-        scanf(" %3s", move);    
-        int i = (move[0] - '0') - 1;
-        int j = (move[1] - '0') - 1;
-        char k = move[2];
+        printf("%d\n %d\n",currentGame->turn , currentGame->flagComp);
+        if((currentGame->flagComp) == 1 && (currentGame->turn == 2))
+        {
+            int x = 1;
+            int targets[] = {3,1,0,2};
+            int played = 0;
+            while(x == 1)
+            {
+                played = 0;
+                for(int i = 0 ; i<4 && !played; i++)
+                {
+                    
+                    x=computerTurn(currentGame , targets[i]);
+                    printf("%d ",x);
+                    played = (x!=0)? 1 : 0;
+                }
+
+            }
+        }
+        else{
+            int size = currentGame->size ;
+            printf("Enter Your Move:");
+            char move[5];
+            scanf(" %3s", move);    
+            int i = (move[0] - '0') - 1;
+            int j = (move[1] - '0') - 1;
+            char k = move[2];
+            checkValidity(currentGame,&i,&j,&k);
+            placeLine(currentGame,i,j,k);
+
+        }
+      
+
+    }
+    void placeLine (gameState*currentGame, int i , int j , char k )
+    {
         int flag = 0;
-        checkValidity(currentGame,&i,&j,&k);
+        int size = currentGame->size ;
         if (k == 'u') {
             currentGame->cells[i][j].up = currentGame->turn;
             if (i != 0) {
@@ -383,5 +422,42 @@ void currentGameTurn(gameState *currentGame, char *typeofMove, gameState history
         }
 
     }
+
+int computerTurn(gameState*currentGame, int target)
+{
+    int size = currentGame->size ;
+    char move[4];
+    int flag = 0;
+    int placed = 0 ;
+    for(int i = 0 ; i <size && !placed ; i++)
+    {
+        for(int j = 0 ; j<size && !placed ;j++)
+        {
+            if(currentGame->cells[i][j].fillCount == target)
+            {
+                placed = 1;
+                if(target == 3) {flag = 1;}
+                else { flag = 2;}
+                if(currentGame->cells[i][j].up == 0)
+                {
+                   placeLine(currentGame,i,j,'u');
+                }
+                else if(currentGame->cells[i][j].bottom == 0)
+                {
+                   placeLine(currentGame,i,j,'b');
+                }
+                else if(currentGame->cells[i][j].left == 0)
+                {
+                    placeLine(currentGame,i,j,'l');    
+                }
+                else if(currentGame->cells[i][j].right == 0){
+                    placeLine(currentGame,i,j,'r');  
+                }
+            }
+        }
+    }
+    return flag;
+}
+
     
     
