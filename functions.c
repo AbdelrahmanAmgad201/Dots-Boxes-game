@@ -186,7 +186,7 @@ int checkCellFull(gameState *currentGame, int i, int j) {
         if (j != 0) {
             currentGame->cells[i][j - 1].right = currentGame->turn;
         }
-        if (j != currentGame->size - 1) {
+        if (j != currentGame->size - 1 && currentGame->cells[i][j + 1].fillCount!=4) {
             currentGame->cells[i][j + 1].left = currentGame->turn;
         }
 
