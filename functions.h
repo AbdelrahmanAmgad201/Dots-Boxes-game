@@ -8,6 +8,8 @@
 #include <time.h>
 #include "dataStructure.h"
 #include "colors.h"
+void dfs(gameState*currentGame , int i , int j , int **visited , int cameFrom , int *stop , int directions[4][2]);
+int chainChecker(gameState*currentGame , int i , int j , char k);
 void printData(gameState * currentGame);
 
 int computerTurn(gameState * currentGame, int target);

@@ -154,6 +154,7 @@ int main() {
         system("cls");
         continue;
       }
+      free(game->cells);
       free(game);
     } else if (order == '2') {
       char typeofMove[2];
@@ -164,6 +165,7 @@ int main() {
         system("cls");
         continue;
       }
+      free(game->cells);
       free(game);
     } else if (order == '3') {
       displayLeaderboard();
@@ -176,6 +178,7 @@ int main() {
       if (n > 0 && n <= 10) {
         loadGameState(savefiles[n - 1], game);
         replay = gameLoop(game, game -> size, 61, 1);
+        free(game->cells);
         free(game);
       } else {
         system("cls");
