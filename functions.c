@@ -114,12 +114,29 @@ void printBoard(cell **cells, int size) {
             }
         }
         printf("+\n");
-
-        for (int j = 0; j < size; j++) {
+        for(int x = 0 ; x<3 ; x++)
+        {
+            for (int j = 0; j < size; j++) {
             if (cells[i][j].left == 1) {
-                printf(RED "|         " RESET);
+                if(cells[i][j].fillCount == 4)
+                {
+                    printf(RED "|"RESET  RED_BACKGROUND"         " COLOR_RESET);
+                }
+                else
+                {
+                    printf(RED "|         " RESET);
+                }
+                
             } else if (cells[i][j].left == 2) {
-                printf(BLUE "|         " RESET);
+                if(cells[i][j].fillCount == 4)
+                {
+                    printf(BLUE "|"RESET  BLUE_BACKGROUND"         " COLOR_RESET);
+                }
+                else
+                {
+                    printf(BLUE "|         " RESET);
+                }
+                
             } else {
                 printf("          ");
             }
@@ -132,39 +149,7 @@ void printBoard(cell **cells, int size) {
         }
 
         printf("\n");
-        for (int j = 0; j < size; j++) {
-            if (cells[i][j].left == 1) {
-                printf(RED "|         " RESET);
-            } else if (cells[i][j].left == 2) {
-                printf(BLUE "|         " RESET);
-            } else {
-                printf("          ");
-            }
-
-            if (cells[i][j].right == 1 && j == size - 1) {
-                printf(RED "|" RESET);
-            } else if (cells[i][j].right == 2 && j == size - 1) {
-                printf(BLUE "|" RESET);
-            } 
         }
-        printf("\n");
-        for (int j = 0; j < size; j++) {
-            if (cells[i][j].left == 1) {
-                printf(RED "|         " RESET);
-            } else if (cells[i][j].left == 2) {
-                printf(BLUE "|         " RESET);
-            } else {
-                printf("          ");
-            }
-
-            if (cells[i][j].right == 1 && j == size - 1) {
-                printf(RED "|" RESET);
-            } else if (cells[i][j].right == 2 && j == size - 1) {
-                printf(BLUE "|" RESET);
-            } 
-        }
-
-        printf("\n");
         if (i == size - 1) {
             for (int j = 0; j < size; j++) {
                 printf("+");

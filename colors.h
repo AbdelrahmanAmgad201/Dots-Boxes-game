@@ -6,3 +6,7 @@
 #define CYAN "\033[1;36m"
 #define WHITE "\033[1;37m"
 #define RESET "\033[0m"
+
+#define BLUE_BACKGROUND  "\x1b[44m"
+#define RED_BACKGROUND   "\x1b[41m"
+#define COLOR_RESET      "\x1b[0m"
