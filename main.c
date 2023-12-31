@@ -82,6 +82,8 @@ int gameLoop(gameState * game, int size, int historySize, int loaded) {
   int counter = 0;
   for (int i = 0; i < historySize; i++) {
     initializeGameState( & history[i]);
+    strcpy(history[0].player1Name , game->player1Name);
+    strcpy(history[0].player2Name , game->player2Name);
     history[i].turn = 0;
     createArr( & history[i], size);
   }
