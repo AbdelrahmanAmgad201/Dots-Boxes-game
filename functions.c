@@ -18,6 +18,7 @@ void undo(gameState *currentGame, gameState history[], int *count)
                 printf("UNDOO");
                 currentGame->score1 = history[*count].score1;
                 currentGame->score2 = history[*count].score2;
+                currentGame->turn = history[*count].turn;
                 currentGame->cellsFilled = history[*count].cellsFilled;
                 strcpy(currentGame->player1Name , history[*count].player1Name);
                 strcpy(currentGame->player2Name , history[*count].player2Name);
